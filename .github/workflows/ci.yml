@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: dart pub get
+      - run: dart analyze
+      - name: CLI smoke test
+        shell: bash
+        run: |
+          printf 'add Build portfolio\nadd Ship release\nlist\ndone 1\nstats\nexit\n' | dart run bin/synapse.dart
+          test -f synapse.json
